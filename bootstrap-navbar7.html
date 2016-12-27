@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!--jquery cdn-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  
+  <!--bootstrap cdn-->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  
+  <!--vuejs cdn-->
+  <script src="https://unpkg.com/vue@2.1.7/dist/vue.js"></script>
+  
+  <title>Document</title>
+</head>
+<body>
+<div class="container">
+  <div id="app">
+    <tabs>
+      <tab name="Tab One" :selected="true">
+        <h1>Composer is great</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus quae repellendus vel! Accusamus aliquid,
+          consequuntur culpa cumque esse ex fugiat impedit inventore laudantium maiores molestiae officia provident quod
+          totam veniam!</p>
+      </tab>
+      <tab name="Tab Taylor Otwell">
+        <h1>Vagrant is awesome</h1>
+        <p>A animi, delectus deleniti dignissimos dolorum ea eveniet hic, impedit, magnam odio tempore ut. Assumenda
+          blanditiis dolorem doloremque eos, id magni maxime necessitatibus odio porro ratione repudiandae tempore
+          voluptate voluptatibus.</p>
+      </tab>
+      <tab name="Laravel and Vuejs">
+        <h1>Docker is way better</h1>
+        <p>Animi fuga in inventore quibusdam sed sint. Ab alias, aliquid at aut commodi culpa ea eligendi ex ipsam
+          libero minus nam nobis numquam obcaecati placeat praesentium quis quod tempore voluptatum?</p>
+      </tab>
+      <tab name="Optimus Prime">
+        <h1>What is Node.js</h1>
+        <p>Accusamus cupiditate dolor doloribus illo ipsam itaque laborum, maxime natus numquam odit officiis possimus
+          quidem voluptatem! Atque dignissimos labore modi nobis quasi quo sit! Aspernatur ea perspiciatis repellendus
+          reprehenderit. Laboriosam?</p>
+      </tab>
+    </tabs>
+  </div>
+</div>
+
+<script type="x-template" id="template-tabs">
+  <div id="applicationContainer">
+    <div id="navBarContainer" class="navbar navbar-default">
+      <ul class="nav navbar-nav">
+        <li class="nav-link" :class="{ active: menuItem.isActive }" v-for="menuItem in navItemsArray"><a :href="menuItem.href" @click="selectTabItem(menuItem)">{{ menuItem.name }}</a></li>
+      </ul>
+    </div>
+    
+    <div id="tabContentContainer">
+      <slot></slot>
+    </div>
+  </div>
+</script>
+
+<script type="x-template" id="template-tab">
+  <div id="individualTabContentContainer" v-show="isActive" class="jumbotron">
+    <slot></slot>
+  </div>
+</script>
+
+<script>
+  Vue.component('tabs', {
+    template: '#template-tabs',
+    data() {
+      return {
+        navItemsArray: []
+      }
+    },
+    mounted() {
+      this.navItemsArray = this.$children
+    },
+    methods: {
+      selectTabItem(passedAlongMenuItemObject) {
+        this.navItemsArray.forEach(navItem => {
+          navItem.isActive = (passedAlongMenuItemObject == navItem)
+        })
+      }
+    }
+  })
+  
+  Vue.component('tab', {
+    template: '#template-tab',
+    props: {
+      name: { required: true },
+      selected: { default: false }
+    },
+    data() {
+      return {
+        isActive: false
+      }
+    },
+    computed: {
+      href() {
+        return '#' + this.name.toLowerCase().replace(/ /g, '-')
+      }
+    },
+    mounted() {
+      this.isActive = this.selected
+    }
+  })
+  
+  new Vue({
+    el: '#app'
+  })
+</script>
+</body>
+</html>
